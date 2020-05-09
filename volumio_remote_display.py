@@ -26,14 +26,23 @@ class Volumio:
         self.url = volumio_url
     
     def set_volumio_var_from_api(self):
-        response = requests.get(self.url + "/api/v1/getState")
-
-        json_data = response.json()
-        self.status = json_data["status"]
-        self.title = json_data["title"]
-        self.artist = json_data["artist"]
-        self.album = json_data["album"]
-        self.albumart_url = self.url + json_data["albumart"]
+        try:
+            response = requests.get(self.url + "/api/v1/getState", timeout=10)
+        except Exception as e:
+            print(e.args)
+            self.status = 'timeout'
+            self.title = 'timeout'
+            self.artist = 'timeout'
+            self.album = 'timeout'
+            self.albumart_url = 'timeout'
+            
+        else:
+            json_data = response.json()
+            self.status = json_data["status"]
+            self.title = json_data["title"]
+            self.artist = json_data["artist"]
+            self.album = json_data["album"]
+            self.albumart_url = self.url + json_data["albumart"]
         
 
 
@@ -131,14 +140,14 @@ def output_to_window():
         volumio_artist_album.set(str(vl.artist) + " / " + str(vl.album))
         volumio_title.set(str(vl.title))
      
-        
-        raw_data = urllib.request.urlopen(vl.albumart_url).read()
-        img = Image.open(BytesIO(raw_data))
-        img = img.resize((500,500))
-        albumart = ImageTk.PhotoImage(img)
-     
-        label_volumio_albumart.configure(image=albumart)
-        label_volumio_albumart.image = albumart
+        if vl.albumart_url != "timeout" :
+             raw_data = urllib.request.urlopen(vl.albumart_url).read()
+             img = Image.open(BytesIO(raw_data))
+             img = img.resize((500,500))
+             albumart = ImageTk.PhotoImage(img)
+          
+             label_volumio_albumart.configure(image=albumart)
+             label_volumio_albumart.image = albumart
 
 
 
