@@ -7,7 +7,9 @@ You can display album title, artist, album jacket from volumio to your remote sc
 Please install python modules.
 
 $ pip install requests
+
 $ pip install tkinter
+
 $ pip install pillow
 
 
