@@ -13,6 +13,8 @@ $ pip install pillow
 
 # How to use
 
+o Usage
+
 $ python volumio_remote_display.py volumioIPaddress
 
 o Example
